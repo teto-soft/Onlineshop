@@ -1,20 +1,18 @@
-![OnlineShop](link)
+<!-- ![OnlineShop](link) gif貼り付け-->
 
 <h2 align="center">Online Shop</h2>
 
 ## 🌐 App URL
 
-### **url**  
+### **coming soon**  
 　
-## 💬 Usage
+<!-- 💬 Usage
 
 `$ git clone https://github.com/teto-soft/OnlineShop.git`  
-　
+-->
 
 ## 📦 Features
 
-<h3 align="center">- PWA -</h3>
+* 機能
 
-<p align="center">
-  <img src="https://〜.jpg" width=40%>
-</p>
+<h3></h3>
