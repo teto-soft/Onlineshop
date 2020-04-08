@@ -26,7 +26,8 @@ if (isset($_SESSION['login'])==false) {
 
 try {
     require_once('../common/common.php');
-    $staff_code=sanitize($_GET['staffcode']);
+    $get=sanitize($_GET);
+    $staff_code=$get['staffcode'];
 
     //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
@@ -41,11 +42,18 @@ try {
     $data[]=$staff_code;
     $stmt->execute($data);
 
-    $rec = $stmt->fetch(PDO::FETCH_ASSOC); //1レコード取得
+    $rec = $stmt->fetch(PDO::FETCH_ASSOC);
     $staff_name=$rec['name'];
 
     //DB切断
     $dbh = null;
+
+    //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
+    $toke_byte = openssl_random_pseudo_bytes(16);
+    $csrf_token = bin2hex($toke_byte);
+
+    // 生成したトークンをセッションに保存
+    $_SESSION['csrf_token'] = $csrf_token;
 } catch (Exception $e) {
     print 'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
@@ -65,6 +73,8 @@ try {
     <form method="post" action="staff_delete_done.php">
         <input type="hidden" name="code"
             value="<?php print $staff_code; ?>">
+        <input type="hidden" name="csrf_token"
+            value="<?=$csrf_token?>">
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="ＯＫ">
     </form>
