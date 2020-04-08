@@ -46,7 +46,6 @@ try {
         $data[0]=$cart[$i];
         $stmt->execute($data);
 
-        //1レコード取得
         $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 
         $name=$rec['name'];
@@ -74,7 +73,7 @@ try {
         $sql='INSERT INTO dat_member (password, name, email, postal1, postal2, address, tel, danjo, born) VALUES (?,?,?,?,?,?,?,?,?)';
         $stmt=$dbh->prepare($sql);
         $data=array(); //初期化
-        $data[]=md5($pass);
+        $data[]=password_hash($pass, PASSWORD_BCRYPT);
         $data[]=$onamae;
         $data[]=$email;
         $data[]=$postal1;
@@ -144,17 +143,9 @@ try {
     if (isset($_COOKIE[session_name()])==true) {
         setcookie(session_name(), '', time()-42000, '/');
         //PC側のセッションIDをクッキーから削除する。
-//----------setcookie関数より前に画面表示があってはいけない------------------------
     }
     session_destroy(); //セッションを破棄する。
     
-    //会員登録した場合の案内
-    if ($chumon=='chumontouroku') {
-        print'会員登録が完了いたしました。<br>';
-        print'次回からメールアドレスとパスワードでログインしてください。';
-        print'簡単にご注文ができるようになります。<br>';
-    }
-
     //メール本文の記載
     $honbun.="送料は無料です。 \n";
     $honbun.="------------------------------ \n";
@@ -200,7 +191,14 @@ try {
     print'商品は以下の住所に発送させていただきます。 <br>';
     print $postal1.'-'.$postal2.'<br>';
     print $address.'<br>';
-    print $tel.'<br>';
+    print $tel.'<br><br>';
+
+    //会員登録した場合の案内
+    if ($chumon=='chumontouroku') {
+        print'会員登録が完了いたしました。<br>';
+        print'次回からメールアドレスとパスワードでログインしてください。';
+        print'簡単にご注文ができるようになります。<br><br>';
+    }
 
     /*    //お客様宛に送るメール
         $title='ご注文ありがとうございます。'; //メールタイトル
@@ -226,7 +224,7 @@ try {
 ?>
 
     <br>
-    <a href="shop_list.php">商品画面へ</a>
+    <a href="shop_list.php">トップページ</a>
 
 </body>
 

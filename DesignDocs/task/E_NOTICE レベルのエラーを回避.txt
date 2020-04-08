@@ -1,0 +1,17 @@
+if (!isset($_POST['email'])) {
+    $errors[] = 'Eメールアドレスが送信されていません';
+} elseif (!is_string($_POST['email'])) {
+    $errors[] = 'Eメールアドレスが不正送信されました';
+} elseif ($_POST['email'] === '') {
+    $errors[] = 'Eメールアドレスが入力されていません';
+}
+
+
+文字列であることをチェックしたい場合
+is_string($var)
+!is_array($var)
+配列であることをチェックしたい場合
+!is_string($var)
+is_array($var)
+
+

@@ -9,7 +9,6 @@
 <?php
 require_once('C:/xampp/htdocs/common/common.php');
 
-//サニタイジング
 $post=sanitize($_POST);
 
 $onamae=$post['onamae'];
@@ -91,6 +90,12 @@ if ($chumon=='chumontouroku') {
         print'パスワードが一致しません。<br><br>';
         $okflg=false;
     }
+
+    if($okflg==true){
+        print'パスワード<br>';
+        print'********<br><br>';
+    }
+
     print'性別<br>';
 
     if ($danjo=='dan') {
@@ -105,6 +110,32 @@ if ($chumon=='chumontouroku') {
     print '年';
     print '<br><br>';
 }
+
+//メールアドレスが被っていないか確認
+//DB接続
+$user='root';
+$dsn='mysql:dbname=shop; host=localhost; charset=utf8';
+$password='';
+$dbh=new PDO($dsn, $user, $password);
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//入力されたメールアドレスをDBから検索
+$sql='SELECT email FROM dat_member WHERE email=?';
+$stmt=$dbh->prepare($sql);
+$data[]=$email;
+$stmt->execute($data);
+
+$rec=$stmt->fetch(PDO::FETCH_ASSOC);
+
+if($rec==true){
+    print $email;
+    print'はすでに会員登録されているメールアドレスです。<br>';
+    print'<a href="member_login.html">こちら</a>からログインできます。<br><br>';
+    $okflg=false;
+}
+
+//DB接続を解除
+$dbh=null;
 
 if ($okflg==true) {
     //正常に入力された場合

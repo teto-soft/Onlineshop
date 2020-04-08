@@ -1,30 +1,27 @@
 <?php
-try {
-    require_once('C:/xampp/htdocs/common/common.php');
-        
+try {        
     $staff_code=$_POST['code'];
     $staff_pass=$_POST['pass'];
   
-    $staff_pass=md5($staff_pass);
-
+    //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
     $user = 'root';
     $password ='';
     $dbh = new PDO($dsn, $user, $password);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    $sql = 'SELECT name FROM mst_staff WHERE code=? AND password=?';
+    //入力されたコードに該当するデータを取得
+    $sql = 'SELECT name, password FROM mst_staff WHERE code=?';
     $stmt = $dbh->prepare($sql);
     $data[]=$staff_code;
-    $data[]=$staff_pass;
     $stmt->execute($data);
-
-    $dbh = null;
-
     $rec = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($rec==false) {
-        print'スタッフコードかパスワードが間違っています<br />';
+    //DB切断
+    $dbh = null;
+
+    if (!password_verify($staff_pass, $rec['password'])) {
+        print'スタッフコードかパスワードが正しくありません。<br><br>';
         print'<a href="staff_login.html">戻る</a>';
     } else {
         //セッションを確認する

@@ -32,10 +32,6 @@ $staff_pass2=$post['pass2'];
 
 if ($staff_name=='') {
     print'スタッフ名が入力されていません。<br>';
-} else {
-    print'スタッフ名：';
-    print $staff_name;
-    print '<br>';
 }
 
 if ($staff_pass=='') {
@@ -53,7 +49,11 @@ if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     print'</form>';
 } else {
     //正常に入力されている場合
-    $staff_pass=md5($staff_pass); //パスワードの暗号化
+    print'スタッフ名：';
+    print $staff_name;
+    print'<br>';
+    print'パスワード：********';
+
     print'<form method="post" action="staff_add_done.php">';
     print'<input type="hidden" name="name" value="'.$staff_name.'">';
     print'<input type="hidden" name="pass" value="'.$staff_pass.'">';

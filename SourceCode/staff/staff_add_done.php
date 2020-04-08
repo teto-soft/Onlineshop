@@ -23,12 +23,9 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-try { //サーバー障害対策
-    require_once('C:/xampp/htdocs/common/common.php');
-    
-    $post=sanitize($_POST);
-    $staff_name = $post['name'];
-    $staff_pass = $post['pass'];
+try {
+    $staff_name = $_POST['name'];
+    $staff_pass = $_POST['pass'];
 
     //DBへの接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
@@ -37,18 +34,27 @@ try { //サーバー障害対策
     $dbh = new PDO($dsn, $user, $password);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //SQL実行
+    //スタッフ名とパスワードを登録
     $sql = 'INSERT INTO mst_staff (name, password) VALUES (?,?)';
     $stmt=$dbh->prepare($sql);
-    $data[] = $staff_name; //一つ目の[?]に入力するデータ
-    $data[] = $staff_pass; //二つ目の[?]に入力するデータ
+    $data[] = $staff_name;
+    $data[] = password_hash($staff_pass, PASSWORD_BCRYPT);
     $stmt->execute($data); //プリペアードステートメント
+
+    //先ほど追加した注文コードを取得して$lastcodeに代入する。
+    $sql='SELECT LAST_INSERT_ID()';
+    $stmt=$dbh->prepare($sql);
+    $stmt->execute();
+    $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+    $lastcode=$rec['LAST_INSERT_ID()'];
 
     //DB切断
     $dbh = null;
 
     print $staff_name;
-    print 'さんを追加しました。<br>';
+    print'さんを追加しました。<br>';
+    print'スタッフコードは'.$lastcode.'です。<br>';
+    print'ログインするときに使用するのでメモしておいてください。<br><br>';
 } catch (Exception $e) {
     print'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
