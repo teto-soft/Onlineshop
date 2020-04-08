@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>注文フォーム</title>
-    <?php require_once('C:/xampp/htdocs/common/common.php'); ?>
+    <?php require_once('../common/common.php'); ?>
 </head>
 
 <body>

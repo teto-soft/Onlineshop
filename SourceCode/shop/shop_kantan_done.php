@@ -5,8 +5,12 @@ if (isset($_SESSION['member_login'])==false) {
     print 'ログインされていません。<br><br>';
     print '<a href="shop_list.php">商品一覧へ</a>';
     exit();
+} elseif (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
+    print'不正なリクエストです。';
+    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
+    exit();
 }
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
 
 try {
     $post=sanitize($_POST);

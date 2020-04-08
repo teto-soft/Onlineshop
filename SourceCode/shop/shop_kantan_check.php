@@ -67,6 +67,13 @@ if (isset($_SESSION['member_login'])==false) {
         print $tel;
         print'<br><br>';
 
+        //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
+        $toke_byte = openssl_random_pseudo_bytes(16);
+        $csrf_token = bin2hex($toke_byte);
+
+        // 生成したトークンをセッションに保存
+        $_SESSION['csrf_token'] = $csrf_token;
+
         //取得した会員情報を渡す。
         print'<form method="post" action="shop_kantan_done.php">';
         print'<input type="hidden" name="onamae" value="'.$onamae.'">';
@@ -75,6 +82,7 @@ if (isset($_SESSION['member_login'])==false) {
         print'<input type="hidden" name="postal2" value="'.$postal2.'">';
         print'<input type="hidden" name="address" value="'.$address.'">';
         print'<input type="hidden" name="tel" value="'.$tel.'">';
+        print'<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
 
         print'<input type="button" onclick="history.back()" value="戻る">';
         print'<input type="submit" value="ＯＫ"><br>';

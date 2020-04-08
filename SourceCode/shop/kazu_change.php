@@ -2,7 +2,7 @@
 session_start();
 session_regenerate_id(true);
 
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
 
 //サニタイジング
 $post=sanitize($_POST);

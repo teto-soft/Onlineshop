@@ -23,8 +23,8 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-try { //サーバー障害対策
-    require_once('C:/xampp/htdocs/common/common.php');
+try { 
+    require_once('../common/common.php');
 
     $post=sanitize($_POST);
     $pro_code = $post['code'];

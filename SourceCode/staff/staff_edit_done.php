@@ -24,7 +24,7 @@ if (isset($_SESSION['login'])==false) {
 
     <?php
 try {
-    require_once('C:/xampp/htdocs/common/common.php');
+    require_once('../common/common.php');
     
     $post=sanitize($_POST);
     $staff_code = $post['code'];

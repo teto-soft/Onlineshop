@@ -1,7 +1,7 @@
 <?php
 
 //下の関数を使ってこのファイルを取得する。
-//require_once('C:/xampp/htdocs/common/common.php');
+//require_once('..common/common.php');
 
 //西暦から元号を導く
 function gengo($seireki)

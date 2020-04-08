@@ -23,7 +23,7 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
     
 $post=sanitize($_POST);
 $staff_code=$post['code'];
@@ -47,6 +47,13 @@ if ($staff_pass!=$staff_pass2) {
     print'パスワードが一致しません。<br>';
 }
 
+ //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
+ $toke_byte = openssl_random_pseudo_bytes(16);
+ $csrf_token = bin2hex($toke_byte);
+
+ // 生成したトークンをセッションに保存
+ $_SESSION['csrf_token'] = $csrf_token;
+
 if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     //入力ミスがある場合
     print'<form>';
@@ -58,6 +65,7 @@ if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     print'<input type="hidden" name="code" value="'.$staff_code.'">';
     print'<input type="hidden" name="name" value="'.$staff_name.'">';
     print'<input type="hidden" name="pass" value="'.$staff_pass.'">';
+    print'<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
     print'<br>';
     print'<input type="button" onclick="history.back()" value="戻る">';
     print'<input type="submit" value="ＯＫ">';

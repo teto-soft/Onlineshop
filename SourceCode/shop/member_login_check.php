@@ -1,5 +1,5 @@
 <?php
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
 
 try {
     $post=sanitize($_POST);

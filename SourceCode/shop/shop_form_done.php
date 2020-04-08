@@ -1,9 +1,14 @@
 <?php
 session_start();
 session_regenerate_id(true);
+if (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
+    print'不正なリクエストです。';
+    print'<a href="shop_list.php">トップページ</a>';
+    exit();
+}
 
 try {
-    require_once('C:/xampp/htdocs/common/common.php');
+    require_once('../common/common.php');
 
     //サニタイジング
     $post=sanitize($_POST);

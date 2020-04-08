@@ -23,9 +23,8 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
 
-//サニタイジング
 $post=sanitize($_POST);
 $pro_name=$post['name'];
 $pro_price=$post['price'];
@@ -61,6 +60,13 @@ if ($pro_gazou['size']>0) {
     }
 }
 
+//ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
+$toke_byte = openssl_random_pseudo_bytes(16);
+$csrf_token = bin2hex($toke_byte);
+
+// 生成したトークンをセッションに保存
+$_SESSION['csrf_token'] = $csrf_token;
+
 if ($pro_name==''||preg_match('/\A[0-9]+\z/', $pro_price)==0||$pro_gazou['size']>1000000) {
     //入力ミスがある場合
     print '<form>';
@@ -72,6 +78,7 @@ if ($pro_name==''||preg_match('/\A[0-9]+\z/', $pro_price)==0||$pro_gazou['size']
     print '<input type="hidden" name="name" value="'.$pro_name.'">';
     print '<input type="hidden" name="price" value="'.$pro_price.'">';
     print '<input type="hidden" name="gazou_name" value="'.$pro_gazou['name'].'">';
+    print '<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
     print '<br>';
     print '<input type="button" onclick="history.back()" value="戻る">';
     print '<input type="submit" value="ＯＫ">';

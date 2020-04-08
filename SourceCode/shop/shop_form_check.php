@@ -7,7 +7,7 @@
 <body>
     
 <?php
-require_once('C:/xampp/htdocs/common/common.php');
+require_once('../common/common.php');
 
 $post=sanitize($_POST);
 
@@ -137,6 +137,13 @@ if($rec==true){
 //DB接続を解除
 $dbh=null;
 
+//ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
+$toke_byte = openssl_random_pseudo_bytes(16);
+$csrf_token = bin2hex($toke_byte);
+
+// 生成したトークンをセッションに保存
+$_SESSION['csrf_token'] = $csrf_token;
+
 if ($okflg==true) {
     //正常に入力された場合
     print'<form method="post" action="shop_form_done.php">';
@@ -150,6 +157,7 @@ if ($okflg==true) {
     print'<input type="hidden" name="pass" value="'.$pass.'">';
     print'<input type="hidden" name="danjo" value="'.$danjo.'">';
     print'<input type="hidden" name="year" value="'.$year.'">';
+    print '<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
 
     print'<input type="button" onclick="history.back()" value="戻る">';
     print'<input type="submit" value="ＯＫ"><br>';
