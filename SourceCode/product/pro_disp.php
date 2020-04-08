@@ -27,7 +27,6 @@ if (isset($_SESSION['login'])==false) {
 try {
     require_once('C:/xampp/htdocs/common/common.php');
 
-    //サニタイジング
     $get=sanitize($_GET);
     $pro_code=$get['procode'];
 

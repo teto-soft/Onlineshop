@@ -23,7 +23,7 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-try { //サーバー障害対策
+try {
     require_once('C:/xampp/htdocs/common/common.php');
     
     $post=sanitize($_POST);
@@ -41,9 +41,9 @@ try { //サーバー障害対策
     //SQL実行
     $sql = 'UPDATE mst_staff SET name=?, password=? WHERE code=?';
     $stmt=$dbh->prepare($sql);
-    $data[] = $staff_name; //一つ目の[?]に入力するデータ
-    $data[] = $staff_pass; //二つ目の[?]に入力するデータ
-    $data[] = $staff_code; //三つ目の[?]に入力するデータ
+    $data[] = $staff_name;
+    $data[] = password_hash($staff_pass, PASSWORD_BCRYPT);
+    $data[] = $staff_code;
     $stmt->execute($data); //プリペアードステートメント
 
     //DB切断

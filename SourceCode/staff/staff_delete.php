@@ -25,7 +25,8 @@ if (isset($_SESSION['login'])==false) {
     <?php
 
 try {
-    $staff_code=$_GET['staffcode'];
+    require_once('../common/common.php');
+    $staff_code=sanitize($_GET['staffcode']);
 
     //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';

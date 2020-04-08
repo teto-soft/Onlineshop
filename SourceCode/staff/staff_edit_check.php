@@ -54,7 +54,6 @@ if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     print'</form>';
 } else {
     //正常に入力された場合
-    $staff_pass=md5($staff_pass); //パスワードの暗号化
     print'<form method="post" action="staff_edit_done.php">';
     print'<input type="hidden" name="code" value="'.$staff_code.'">';
     print'<input type="hidden" name="name" value="'.$staff_name.'">';
