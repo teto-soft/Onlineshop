@@ -115,8 +115,12 @@ try {
     
     //print nl2br($csv);
 
+    //ランダムな文字列を生成する
+    $rand_str = chr(mt_rand(65,90)) . chr(mt_rand(65,90)) . chr(mt_rand(65,90)) .
+                chr(mt_rand(65,90)) . chr(mt_rand(65,90)) . chr(mt_rand(65,90));
+
     //ファイルの書き込み
-    $file=fopen('./chumon.csv', 'w'); //ファイルを開ける。
+    $file=fopen('./'.$rand_str.'.csv', 'w'); //ファイルを開ける。
     $csv=mb_convert_encoding($csv, 'SJIS', 'UTF-8'); //文字コードの変換
     fputs($file, $csv); //ファイルに書き込む。
     fclose($file); //ファイルを閉じる。
@@ -126,7 +130,7 @@ try {
 }
 
     if ($okflg==true) {
-        print'<a href="chumon.csv">注文データのダウンロード</a><br>';
+        print'<a href="'.$rand_str.'.csv">注文データのダウンロード</a><br>';
         print'<br>';
     } else {
         print $year.'年'.$month.'月'.$day.'日';
