@@ -38,7 +38,6 @@ if (preg_match('/\A[0-9]+\z/', $pro_price)==0) {
 
 //画像の入力確認
 if ($pro_gazou['size']>0) {
-    //画像が入力されているかの確認
     if ($pro_gazou['size']>1000000) {
         //画像のサイズ制限
         print'画像のサイズが大きすぎます。<br><br>';

@@ -19,6 +19,7 @@ checkLoginStaff();
 価格を入力してください。<br>
 <input type="text" name="price" style="width:50px">円<br><br>
 画像を選んでください。<br>
+<input type="hidden" name="max_file_size" value="1000000" />
 <input type="file" name="gazou" style="width:400px"><br>
 <br><br>
 <input type="button" onclick="history.back()" value="戻る">
