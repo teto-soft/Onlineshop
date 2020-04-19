@@ -1,15 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -38,32 +30,36 @@ try {
 
     //DB切断
     $dbh = null;
-
-    print '商品一覧<br><br>';
-    //修正画面
-    print '<form method="post" action="pro_branch.php">';
-
-    while (true) {
-        $rec=$stmt->fetch(PDO::FETCH_ASSOC); //$stmtから一つずつ取り出す
-        if ($rec==false) {
-            break;
-        }
-        //スタッフコードを渡す
-        print '<input type="radio" name="procode" value="'.$rec['code'].'">';
-        print $rec['name'].'---';
-        print $rec['price'].'円';
-        print '<br>';
-    }
-    print '<input type="submit" name="disp" value="参照">';
-    print '<input type="submit" name="add" value="追加">';
-    print '<input type="submit" name="edit" value="修正">';
-    print '<input type="submit" name="delete" value="削除">';
-    print '</form><br>';
 } catch (Exception $e) {
     print 'ただいま障害により大変ご迷惑をおかけしております。';
     exit();
 }
 ?>
+    
+    商品一覧<br><br>
+
+    <form method="post" action="pro_branch.php">
+        <?php
+        //商品一覧を箇条書きで表示
+    while (true) {
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        if ($rec==false) {
+            break;
+        }
+        //商品コードを渡す
+        print '<input type="radio" name="procode" value="'.$rec['code'].'">';
+        print $rec['name'].'---';
+        print $rec['price'].'円<br>';
+    }
+    //measures for csrf/form
+    csrfForm();
+    ?>
+        <!-- 操作ボタンによる分岐 -->
+        <input type="submit" name="disp" value="参照">
+        <input type="submit" name="add" value="追加">
+        <input type="submit" name="edit" value="修正">
+        <input type="submit" name="delete" value="削除">
+    </form><br>
 
     <a href="../staff_login/staff_top.php">トップメニュー</a><br>
 

@@ -1,15 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -25,8 +17,8 @@ if (isset($_SESSION['login'])==false) {
     <?php
 
 try {
-    require_once('../common/common.php');
-    $get=sanitize($_GET);
+    //escape
+    $get=e($_GET);
     $staff_code=$get['staffcode'];
 
     //DB接続
@@ -48,12 +40,6 @@ try {
     //DB切断
     $dbh = null;
 
-    //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
-    $toke_byte = openssl_random_pseudo_bytes(16);
-    $csrf_token = bin2hex($toke_byte);
-
-    // 生成したトークンをセッションに保存
-    $_SESSION['csrf_token'] = $csrf_token;
 } catch (Exception $e) {
     print 'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();
@@ -66,17 +52,17 @@ try {
     <?php print $staff_code; ?><br>
     スタッフ名<br>
     <?php print $staff_name;?>
-    <br>
+    <br><br>
     このスタッフを削除してもよろしいですか？<br>
     <br>
 
     <form method="post" action="staff_delete_done.php">
         <input type="hidden" name="code"
             value="<?php print $staff_code; ?>">
-        <input type="hidden" name="csrf_token"
-            value="<?=$csrf_token?>">
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="ＯＫ">
+        <!-- measures for csrf/form -->
+        <?php csrfForm(); ?>
     </form>
 
 </body>

@@ -1,15 +1,9 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
+//measures for csrf/check
+csrfCheck();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -24,9 +18,8 @@ if (isset($_SESSION['login'])==false) {
 
     <?php
 try {
-    require_once('../common/common.php');
-    
-    $post=sanitize($_POST);
+    //escape
+    $post=e($_POST);
     $staff_code = $post['code'];
     $staff_name = $post['name'];
     $staff_pass = $post['pass'];

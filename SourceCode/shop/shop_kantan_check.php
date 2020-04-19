@@ -1,12 +1,7 @@
 <?php
-
-session_start();
-session_regenerate_id(true);
-if (isset($_SESSION['member_login'])==false) {
-    print 'ログインされていません。<br><br>';
-    print '<a href="shop_list.php">商品一覧へ</a>';
-    exit();
-}
+require_once('../common/common.php');
+//check the login status of member
+checkLoginMember();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -29,7 +24,7 @@ if (isset($_SESSION['member_login'])==false) {
         $dbh = new PDO($dsn, $user, $password);
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        //ログイン情報から会員情報を取得する。
+        //メールアドレスから会員情報を取得
         $sql = 'SELECT name, email, postal1, postal2, address, tel FROM dat_member WHERE code=?';
         $stmt = $dbh->prepare($sql);
         $data[]=$code;
@@ -39,6 +34,7 @@ if (isset($_SESSION['member_login'])==false) {
         //DB切断
         $dbh = null;
 
+        //取得した会員情報を変数に代入
         $onamae=$rec['name'];
         $email=$rec['email'];
         $postal1=$rec['postal1'];
@@ -47,32 +43,19 @@ if (isset($_SESSION['member_login'])==false) {
         $tel=$rec['tel'];
 
         print'お名前<br>';
-        print $onamae;
-        print'<br><br>';
+        print $onamae.'<br><br>';
 
         print'メールアドレス<br>';
-        print $email;
-        print'<br><br>';
+        print $email.'<br><br>';
 
         print'郵便番号<br>';
-        print $postal1;
-        print'-';
-        print $postal2;
+        print $postal1.'-'.$postal2;
 
         print'住所<br>';
-        print $address;
-        print '<br><br>';
+        print $address.'<br><br>';
     
         print'電話番号<br>';
-        print $tel;
-        print'<br><br>';
-
-        //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
-        $toke_byte = openssl_random_pseudo_bytes(16);
-        $csrf_token = bin2hex($toke_byte);
-
-        // 生成したトークンをセッションに保存
-        $_SESSION['csrf_token'] = $csrf_token;
+        print $tel.'<br><br>';
 
         //取得した会員情報を渡す。
         print'<form method="post" action="shop_kantan_done.php">';
@@ -82,13 +65,15 @@ if (isset($_SESSION['member_login'])==false) {
         print'<input type="hidden" name="postal2" value="'.$postal2.'">';
         print'<input type="hidden" name="address" value="'.$address.'">';
         print'<input type="hidden" name="tel" value="'.$tel.'">';
-        print'<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
 
         print'<input type="button" onclick="history.back()" value="戻る">';
         print'<input type="submit" value="ＯＫ"><br>';
+        //measures against csrf/form
+        csrfForm();
         print'</form>';
     } catch (\Throwable $th) {
         print'ただいま障害が発生しており、ご迷惑をおかけしております。';
+        exit();
     }
 ?>
 

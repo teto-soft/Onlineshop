@@ -1,15 +1,9 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
+//measures for csrf/check
+csrfCheckShop();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -24,11 +18,8 @@ if (isset($_SESSION['login'])==false) {
 
     <?php
 try {
-    require_once('../common/common.php');
-
-    //サニタイズ
-    $post=sanitize($_POST);
-
+    //escape
+    $post=e($_POST);
     $year=$post['year'];
     $month=$post['month'];
     $day=$post['day'];
@@ -114,22 +105,21 @@ try {
     }
     
     //print nl2br($csv);
-
-    //ランダムな文字列を生成する
-    $rand_str = chr(mt_rand(65,90)) . chr(mt_rand(65,90)) . chr(mt_rand(65,90)) .
-                chr(mt_rand(65,90)) . chr(mt_rand(65,90)) . chr(mt_rand(65,90));
-
-    //ファイルの書き込み
-    $file=fopen('./'.$rand_str.'.csv', 'w'); //ファイルを開ける。
-    $csv=mb_convert_encoding($csv, 'SJIS', 'UTF-8'); //文字コードの変換
-    fputs($file, $csv); //ファイルに書き込む。
-    fclose($file); //ファイルを閉じる。
 } catch (Exception $e) {
     print 'ただいま障害により大変ご迷惑をおかけしております。';
     exit();
 }
 
     if ($okflg==true) {
+        //ランダムな文字列を生成する
+        $rand_str = chr(mt_rand(65, 90)) . chr(mt_rand(65, 90)) . chr(mt_rand(65, 90)) .
+        chr(mt_rand(65, 90)) . chr(mt_rand(65, 90)) . chr(mt_rand(65, 90));
+
+        //ファイルの書き込み
+        $file=fopen('./'.$rand_str.'.csv', 'w'); //ファイルを開ける。
+        $csv=mb_convert_encoding($csv, 'SJIS', 'UTF-8'); //文字コードの変換
+        fputs($file, $csv); //ファイルに書き込む。
+       fclose($file); //ファイルを閉じる。
         print'<a href="'.$rand_str.'.csv">注文データのダウンロード</a><br>';
         print'<br>';
     } else {

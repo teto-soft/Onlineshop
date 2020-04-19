@@ -1,18 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['member_login'])==false) {
-    print'オンラインショップへようこそ<br>';
-    print'<a href="member_login.html">会員ログイン<a><br><br>';
-//exit();
-} else {
-    print'ようこそ';
-    print $_SESSION['member_name'];
-    print'様<br><br>';
-    print'<a href="member_logout.php">ログアウト<a><br>';
-    print'<br>';
-}
+require_once('../common/common.php');
+//check the login status of member
+checkLoginMember();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -27,9 +16,8 @@ if (isset($_SESSION['member_login'])==false) {
 
     <?php
 try {
-    require_once('../common/common.php');
-
-    $get=sanitize($_GET);
+    //escape
+    $get=e($_GET);
     $pro_code=$get['procode'];
 
     //DB接続
@@ -44,10 +32,9 @@ try {
     $stmt=$dbh->prepare($sql);
     $data[]=$pro_code;
     $stmt->execute($data);
-
-    //1レコード取り出す。
     $rec = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    //取り出したデータを変数に代入
     $pro_name=$rec['name'];
     $pro_price=$rec['price'];
     $pro_gazou_name=$rec['gazou'];
@@ -67,7 +54,7 @@ try {
 }
 ?>
 
-    商品情報 <br>
+    商品詳細 <br>
     <br>
     商品コード：<?php print $pro_code; ?>
     <br>

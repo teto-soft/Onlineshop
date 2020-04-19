@@ -1,12 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-}
+require_once('../common/common.php');
+//measures for csrf/check
+csrfCheck();
 
 //修正ボタン押下
 if (isset($_POST['disp'])==true) {

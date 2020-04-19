@@ -1,12 +1,10 @@
 <?php
-session_start();
-session_regenerate_id(true);
-
 require_once('../common/common.php');
+//measures against csrf/check
+csrfCheckShop();
 
-//サニタイジング
-$post=sanitize($_POST);
-
+//escape
+$post=e($_POST);
 //商品の種類数を代入
 $max=$post['max'];
 
@@ -28,8 +26,8 @@ for ($i=0; $i < $max; $i++) {
 //カート内の商品をセッションに保管
 $cart=$_SESSION['cart'];
 
+//商品の種類数だけループ
 for ($i=$max; 0<=$i; $i--) {
-    //商品の種類数だけループ
     if (isset($post['sakujo'.$i])==true) {
         //チェックされた商品と個数を削除
         array_splice($cart, $i, 1);

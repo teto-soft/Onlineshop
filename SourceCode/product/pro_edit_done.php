@@ -1,19 +1,9 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} elseif (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
-    print'不正なリクエストです。';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
+//measures for csrf/check
+csrfCheck();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -28,10 +18,9 @@ if (isset($_SESSION['login'])==false) {
 
 
     <?php
-try { //サーバー障害対策
-    require_once('../common/common.php');
-
-    $post=sanitize($_POST);
+try {
+    //escape
+    $post=e($_POST);
     $pro_code = $post['code'];
     $pro_name = $post['name'];
     $pro_price = $post['price'];
@@ -48,10 +37,10 @@ try { //サーバー障害対策
     //SQL実行
     $sql = 'UPDATE mst_product SET name=?, price=?, gazou=? WHERE code=?';
     $stmt=$dbh->prepare($sql);
-    $data[] = $pro_name; //一つ目の[?]に入力するデータ
-    $data[] = $pro_price; //二つ目の[?]に入力するデータ
-    $data[] = $pro_gazou_name; //三つ目の[?]に入力するデータ
-    $data[] = $pro_code; //四つ目の[?]に入力するデータ
+    $data[] = $pro_name;
+    $data[] = $pro_price;
+    $data[] = $pro_gazou_name;
+    $data[] = $pro_code;
     $stmt->execute($data); //プリペアードステートメント
 
     //DB切断
@@ -71,6 +60,7 @@ try { //サーバー障害対策
 
 ?>
 
+    <br>
     <a href="pro_list.php">戻る</a>
 
 </body>

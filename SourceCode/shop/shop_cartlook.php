@@ -1,18 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-if (isset($_SESSION['member_login'])==false) {
-    //ログインの証拠がない場合
-    print'オンラインショップへようこそ<br>';
-    print'<a href="member_login.html">会員ログイン<a><br><br>';
-//exit();
-} else {
-    print'ようこそ';
-    print $_SESSION['member_name'];
-    print'様';
-    print'<a href="member_logout.php">ログアウト<a><br>';
-    print'<br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginMember();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -29,9 +18,9 @@ if (isset($_SESSION['member_login'])==false) {
 try {
     if (isset($_SESSION['cart'])==true) {
         //カート内に商品が存在するときのみ実行
-        $cart=$_SESSION['cart']; //保管していたカートの中身を代入
-        $kazu=$_SESSION['kazu']; //保管していたカートの個数を代入
-        $max=count($cart); //カート内の商品の種類数
+        $cart=$_SESSION['cart'];
+        $kazu=$_SESSION['kazu'];
+        $max=count($cart); //カートの商品の種類数
     } else {
         $max=0; //エラーを出さないために0を代入する。
     }
@@ -56,10 +45,9 @@ try {
         $stmt=$dbh->prepare($sql);
         $data[0]=$val; //ループを回すたびに配列が増えないよう0を指定している。
         $stmt->execute($data);
-
-        //1レコード取り出す。
         $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 
+        //取り出したデータを変数に代入
         $pro_name[]=$rec['name'];
         $pro_price[]=$rec['price'];
         if ($rec['gazou']=='') {
@@ -113,16 +101,16 @@ try {
         <input type="hidden" name="max" value="<?php print $max; ?>">
         <input type="submit" value="数量変更"> チェックを入れて[数量変更]ボタンを押すとカートから削除できます。<br><br>
         <input type="button" onclick="history.back()" value="商品一覧へ戻る">
+        <!--measures against csrf/form -->
+        <?php csrfForm(); ?>
     </form>
     <br>
 
     <?php
     if (isset($_SESSION["member_login"])==true) {
         print'<a href="shop_kantan_check.php">ご購入手続きへ進む</a><br>';
-    }else{
-            
-    print'<a href="shop_form.php">ご購入手続きへ進む</a><br>';
-
+    } else {
+        print'<a href="shop_form.php">ご購入手続きへ進む</a><br>';
     }
     ?>
 

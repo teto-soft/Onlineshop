@@ -5,7 +5,6 @@ session_start(); //セッション変数（秘密文書）を空にする。
 $_SESSION=array();
 if (isset($_COOKIE[session_name()])==true) {
     //PC側のセッションIDをクッキーから削除する。
-    //setcookie関数より前に画面表示があってはいけないルール
     setcookie(session_name(), '', time()-42000, '/');
 }
 session_destroy(); //セッションを破棄する。

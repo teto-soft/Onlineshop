@@ -1,19 +1,9 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} elseif (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
-    print'不正なリクエストです。';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
+//measures for csrf/check
+csrfCheck();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -28,8 +18,10 @@ if (isset($_SESSION['login'])==false) {
 
     <?php
 try {
-    $staff_name = $_POST['name'];
-    $staff_pass = $_POST['pass'];
+    //escape
+    $post = e($_POST);
+    $staff_name = $post['name'];
+    $staff_pass = $post['pass'];
 
     //DBへの接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
@@ -57,8 +49,8 @@ try {
 
     print $staff_name;
     print'さんを追加しました。<br>';
-    print'スタッフコードは'.$lastcode.'です。<br>';
-    print'ログインするときに使用するのでメモしておいてください。<br><br>';
+    print'次回からスタッフコードとパスワードを使ってログインできます。<br><br>';
+    print'スタッフコードは '.$lastcode.' です。<br><br>';
 } catch (Exception $e) {
     print'ただいま障害により大変ご迷惑をお掛けしております。';
     exit();

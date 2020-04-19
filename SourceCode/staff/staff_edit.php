@@ -1,15 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -25,8 +17,9 @@ if (isset($_SESSION['login'])==false) {
     <?php
 
 try {
-    require_once('../common/common.php');
-    $staff_code=sanitize($_GET['staffcode']);
+    //escape
+    $get = e($_GET);
+    $staff_code=$get['staffcode'];
 
     //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
@@ -57,7 +50,7 @@ try {
     スタッフコード<br>
     <?php print $staff_code; ?>
 
-    <br><br>
+    <br>
     <form method="post" action="staff_edit_check.php">
         <input type="hidden" name="code"
             value="<?php print $staff_code; ?>">
@@ -68,8 +61,7 @@ try {
         <input type="password" name="pass" style="width:100px"><br>
         パスワードをもう1度入力してください。<br>
         <input type="password" name="pass2" style="width:100px"><br>
-        <br>
-
+        <br><br>
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="ＯＫ">
     </form>

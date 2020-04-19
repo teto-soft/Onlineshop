@@ -1,7 +1,11 @@
 <?php
-try {        
-    $staff_code=$_POST['code'];
-    $staff_pass=$_POST['pass'];
+require_once('../common/common.php');
+
+try { 
+    //escape
+    $post = e($_POST);
+    $staff_code=$post['code'];
+    $staff_pass=$post['pass'];
   
     //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
@@ -10,7 +14,7 @@ try {
     $dbh = new PDO($dsn, $user, $password);
     $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
-    //入力されたコードに該当するデータを取得
+    //入力されたスタッフコードに該当するスタッフを取得
     $sql = 'SELECT name, password FROM mst_staff WHERE code=?';
     $stmt = $dbh->prepare($sql);
     $data[]=$staff_code;
@@ -24,7 +28,6 @@ try {
         print'スタッフコードかパスワードが正しくありません。<br><br>';
         print'<a href="staff_login.html">戻る</a>';
     } else {
-        //セッションを確認する
         session_start();
         $_SESSION['login']=1;
         $_SESSION['staff_code']=$staff_code;

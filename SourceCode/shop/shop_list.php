@@ -1,17 +1,7 @@
 <?php
-//ログイン状態の確認
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-if (isset($_SESSION['member_login'])==false) {//ログインの証拠がない場合
-    print'オンラインショップへようこそ<br>';
-    print'<a href="../shop/member_login.html">会員ログイン<a><br><br>';
-//exit();
-} else {//ログインの証拠がある場合
-    print'ようこそ';
-    print $_SESSION['member_name'];
-    print'様ログイン中 ';
-    print'<a href="member_logout.php">ログアウト</a><br><br>';
-}
+require_once('../common/common.php');
+//check the login status of member
+checkLoginMember();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -26,7 +16,7 @@ if (isset($_SESSION['member_login'])==false) {//ログインの証拠がない�
 
     <?php
 try {
-    //DBへの接続
+    //DB接続
     $dsn = 'mysql:dbname=shop;host=localhost;charset=utf8';
     $user = 'root';
     $password='';
@@ -45,9 +35,9 @@ try {
     print '商品一覧<br><br>';
 
     while (true) {
-        $rec=$stmt->fetch(PDO::FETCH_ASSOC); //$stmtから1つ取り出す
+        $rec=$stmt->fetch(PDO::FETCH_ASSOC);
+        //該当するデータがない場合ループを抜ける。
         if ($rec==false) {
-            //該当するデータがない場合ループを抜ける。
             break;
         }
         //商品コードを渡す

@@ -1,15 +1,22 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>注文チェック</title>
-</head>
-<body>
-    
 <?php
 require_once('../common/common.php');
+//measures against csrf/check for shop
+csrfCheckShop();
+?>
 
-$post=sanitize($_POST);
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>注文チェック</title>
+</head>
+
+<body>
+
+    <?php
+//escape
+$post=e($_POST);
 
 $onamae=$post['onamae'];
 $email=$post['email'];
@@ -91,7 +98,7 @@ if ($chumon=='chumontouroku') {
         $okflg=false;
     }
 
-    if($okflg==true){
+    if ($okflg==true) {
         print'パスワード<br>';
         print'********<br><br>';
     }
@@ -124,25 +131,17 @@ $sql='SELECT email FROM dat_member WHERE email=?';
 $stmt=$dbh->prepare($sql);
 $data[]=$email;
 $stmt->execute($data);
-
 $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 
-if($rec==true){
+if ($rec==true) {
     print $email;
     print'はすでに会員登録されているメールアドレスです。<br>';
     print'<a href="member_login.html">こちら</a>からログインできます。<br><br>';
     $okflg=false;
 }
 
-//DB接続を解除
+//DB切断
 $dbh=null;
-
-//ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
-$toke_byte = openssl_random_pseudo_bytes(16);
-$csrf_token = bin2hex($toke_byte);
-
-// 生成したトークンをセッションに保存
-$_SESSION['csrf_token'] = $csrf_token;
 
 if ($okflg==true) {
     //正常に入力された場合
@@ -157,10 +156,11 @@ if ($okflg==true) {
     print'<input type="hidden" name="pass" value="'.$pass.'">';
     print'<input type="hidden" name="danjo" value="'.$danjo.'">';
     print'<input type="hidden" name="year" value="'.$year.'">';
-    print '<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
 
     print'<input type="button" onclick="history.back()" value="戻る">';
     print'<input type="submit" value="ＯＫ"><br>';
+    //measures against csrf/form
+    csrfForm();
     print'</form>';
 } else {
     print'<form>';
@@ -171,4 +171,5 @@ if ($okflg==true) {
 ?>
 
 </body>
+
 </html>

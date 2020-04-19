@@ -1,20 +1,20 @@
 <?php
-session_start();
-session_regenerate_id(true);
-if (isset($_SESSION['member_login'])==false) {
-    print 'ログインされていません。<br><br>';
-    print '<a href="shop_list.php">商品一覧へ</a>';
-    exit();
-} elseif (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
-    print'不正なリクエストです。';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-}
 require_once('../common/common.php');
+//check the login status of member
+session_start();
+session_regenerate_id(true); //毎回合言葉を変える
+if (isset($_SESSION['member_login'])==false) {
+    //ログインできていない場合
+    print'オンラインショップへようこそ<br>';
+    print'<a href="member_login.html">会員ログイン<a><br><br>';
+    exit();
+} 
+//measures against csrf/check/shop
+csrfCheckShop();
 
 try {
-    $post=sanitize($_POST);
-
+    //escape
+    $post=e($_POST);
     $onamae=$post['onamae'];
     $email=$post['email'];
     $postal1=$post['postal1'];
@@ -29,7 +29,7 @@ try {
     $honbun.="ご注文いただいた商品 \n";
     $honbun.="------------------------------ \n";
     
-    //カートに中身とそれぞれの数量をセッションに入れて維持
+    //カートの中身とそれぞれの数量を代入
     $cart=$_SESSION['cart'];
     $kazu=$_SESSION['kazu'];
     $max=count($cart);
@@ -47,9 +47,9 @@ try {
         $stmt=$dbh->prepare($sql);
         $data[0]=$cart[$i];
         $stmt->execute($data);
-
         $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 
+        //取得したデータを変数に代入
         $name=$rec['name'];
         $price=$rec['price'];
         $kakaku[]=$price; //注文確定時の価格を記録する。（価格変動に対応）
@@ -102,22 +102,20 @@ try {
         $stmt->execute($data);
     }
 
-    //ロック解除
+    //DBのロックを解除
     $sql='UNLOCK TABLES';
     $stmt=$dbh->prepare($sql);
     $stmt->execute();
 
-    //DB接続を解除
+    //DB切断
     $dbh=null;
     
     //カートクリアする。
     //セッション変数を空、セッションIDをクッキーから削除、セッションを破棄
     $_SESSION=array(); //セッション変数（秘密文書）を空にする。
-
     if (isset($_COOKIE[session_name()])==true) {
         setcookie(session_name(), '', time()-42000, '/');
         //PC側のセッションIDをクッキーから削除する。
-//----------setcookie関数より前に画面表示があってはいけない------------------------
     }
     session_destroy(); //セッションを破棄する。
 

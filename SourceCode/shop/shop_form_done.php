@@ -1,18 +1,13 @@
 <?php
-session_start();
-session_regenerate_id(true);
-if (isset($_POST["csrf_token"])!= $_SESSION['csrf_token']) {
-    print'不正なリクエストです。';
-    print'<a href="shop_list.php">トップページ</a>';
-    exit();
-}
+require_once('../common/common.php');
+//measures against csrf/check for shop
+csrfCheckShop();
 
 try {
-    require_once('../common/common.php');
+    //escape
+    $post=e($_POST);
 
-    //サニタイジング
-    $post=sanitize($_POST);
-
+    //入力値を変数に代入
     $onamae=$post['onamae'];
     $email=$post['email'];
     $postal1=$post['postal1'];
@@ -50,9 +45,9 @@ try {
         $stmt=$dbh->prepare($sql);
         $data[0]=$cart[$i];
         $stmt->execute($data);
-
         $rec=$stmt->fetch(PDO::FETCH_ASSOC);
 
+        //取得したデータを変数に代入
         $name=$rec['name'];
         $price=$rec['price'];
         $kakaku[]=$price; //注文確定時の価格を記録する。（価格変動に対応）

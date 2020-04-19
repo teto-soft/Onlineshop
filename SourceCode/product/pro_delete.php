@@ -1,15 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -25,10 +17,8 @@ if (isset($_SESSION['login'])==false) {
     <?php
 
 try {
-    require_once('../common/common.php');
-
-    //サニタイジング
-    $get=sanitize($_GET);
+    //escape
+    $get=e($_GET);
     $pro_code=$get['procode'];
 
     //DB接続
@@ -71,7 +61,7 @@ try {
     <?php print $disp_gazou;?>
     <br>
     この商品を削除してもよろしいですか？<br>
-    <br>
+    <br><br>
     <form method="post" action="pro_delete_done.php">
         <input type="hidden" name="code"
             value="<?php print $pro_code; ?>">
@@ -79,6 +69,8 @@ try {
             value="<?php print $pro_gazou_name; ?>">
         <input type="button" onclick="history.back()" value="戻る">
         <input type="submit" value="ＯＫ">
+        <!-- measures for csrf/form -->
+        <?php csrfForm(); ?>
     </form>
 
 </body>

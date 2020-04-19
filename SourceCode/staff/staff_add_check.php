@@ -1,15 +1,7 @@
 <?php
-session_start();
-session_regenerate_id(true); //毎回合言葉を変える
-//ログインの証拠がない場合
-if (isset($_SESSION['login'])==false) {
-    print'ログインされていません。<br>';
-    print'<a href="../staff_login/staff_login.html">ログイン画面へ<a>';
-    exit();
-} else {
-    print $_SESSION['staff_name'];
-    print'さんログイン中<br><br>';
-}
+require_once('../common/common.php');
+//check the login status of staff
+checkLoginStaff();
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -23,31 +15,23 @@ if (isset($_SESSION['login'])==false) {
 <body>
 
     <?php
-require_once('../common/common.php');
-    
-$post=sanitize($_POST);
+//escape
+$post=e($_POST);
 $staff_name=$post['name'];
 $staff_pass=$post['pass'];
 $staff_pass2=$post['pass2'];
 
 if ($staff_name=='') {
-    print'スタッフ名が入力されていません。<br>';
+    print'スタッフ名が入力されていません。<br><br>';
 }
 
 if ($staff_pass=='') {
-    print'パスワードが入力されていません。<br>';
+    print'パスワードが入力されていません。<br><br>';
 }
 
 if ($staff_pass!=$staff_pass2) {
-    print'パスワードが一致しません。<br>';
+    print'パスワードが一致しません。<br><br>';
 }
-
- //ランダムなバイナリを生成し、16進数に変換することでASCII文字列に変換
- $toke_byte = openssl_random_pseudo_bytes(16);
- $csrf_token = bin2hex($toke_byte);
-
- // 生成したトークンをセッションに保存
- $_SESSION['csrf_token'] = $csrf_token;
 
 if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     //入力ミスがある場合
@@ -56,18 +40,17 @@ if ($staff_name==''|| $staff_pass==''|| $staff_pass!=$staff_pass2) {
     print'</form>';
 } else {
     //正常に入力されている場合
-    print'スタッフ名：';
-    print $staff_name;
-    print'<br>';
+    print'スタッフ名：'.$staff_name.'<br>';
     print'パスワード：********';
 
     print'<form method="post" action="staff_add_done.php">';
     print'<input type="hidden" name="name" value="'.$staff_name.'">';
     print'<input type="hidden" name="pass" value="'.$staff_pass.'">';
-    print'<input type="hidden" name="csrf_token" value="<?=$csrf_token?>">';
     print'<br>';
     print'<input type="button" onclick="history.back()" value="戻る">';
     print'<input type="submit" value="ＯＫ">';
+    //measures for csrf/form
+    csrfForm();
     print'</form>';
 }
 ?>
