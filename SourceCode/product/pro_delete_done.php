@@ -41,7 +41,7 @@ try {
     $dbh = null;
 
     if ($pro_gazou_name !='') {
-        unlink('./gazou/'.$pro_gazou_name);
+        unlink('../../gazou/'.$pro_gazou_name);
     }
 } catch (Exception $e) {
     print'ただいま障害により大変ご迷惑をお掛けしております。';

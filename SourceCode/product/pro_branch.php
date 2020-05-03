@@ -49,3 +49,5 @@ if (isset($pro_delete)==true) {
     header('Location: pro_delete.php?procode='.$pro_code);
     exit();
 }
+
+//header('Location: http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/file1.php');

@@ -49,7 +49,7 @@ try {
     //古い画像があり、修正前と違う場合は削除
     /* if($pro_gazou_name_old !=$pro_gazou_name)
     {
-        unlink('./gazou/'.$pro_gazou_name_old);
+        unlink('../../gazou/'.$pro_gazou_name_old);
     }
     */
     print '商品情報を修正しました。<br>';

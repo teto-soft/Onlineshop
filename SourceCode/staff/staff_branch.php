@@ -42,5 +42,6 @@ if (isset($_POST['delete'])==true) {
     }
     $staff_code=$_POST['staffcode'];
     header('Location: staff_delete.php?staffcode='.$staff_code);
+    //header('Location: http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/file1.php');
     exit();
 }

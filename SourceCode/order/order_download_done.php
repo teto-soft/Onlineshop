@@ -116,11 +116,11 @@ try {
         chr(mt_rand(65, 90)) . chr(mt_rand(65, 90)) . chr(mt_rand(65, 90));
 
         //ファイルの書き込み
-        $file=fopen('./'.$rand_str.'.csv', 'w'); //ファイルを開ける。
+        $file=fopen('../../order_list/'.$rand_str.'.csv', 'w'); //ファイルを開ける。
         $csv=mb_convert_encoding($csv, 'SJIS', 'UTF-8'); //文字コードの変換
         fputs($file, $csv); //ファイルに書き込む。
-       fclose($file); //ファイルを閉じる。
-        print'<a href="'.$rand_str.'.csv">注文データのダウンロード</a><br>';
+        fclose($file); //ファイルを閉じる。
+        print'<a href="../../order_list/'.$rand_str.'.csv">注文データのダウンロード</a><br>';
         print'<br>';
     } else {
         print $year.'年'.$month.'月'.$day.'日';

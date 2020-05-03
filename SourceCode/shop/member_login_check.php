@@ -43,6 +43,7 @@ try {
         $_SESSION['member_code']=$rec['code'];
         $_SESSION['member_name']=$rec['name'];
         header('Location: shop_list.php');
+        //header('Location: http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/file1.php');
     }
     exit();
 } catch (Exception $e) {

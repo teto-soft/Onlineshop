@@ -46,7 +46,7 @@ try {
     if ($pro_gazou_name=='') {
         $disp_gazou='';
     } else {
-        $disp_gazou='<img src="../product/gazou/'.$pro_gazou_name.'">';
+        $disp_gazou='<img src="../../gazou/'.$pro_gazou_name.'">';
     }
 } catch (Exception $e) {
     print 'ただいま障害により大変ご迷惑をお掛けしております。';

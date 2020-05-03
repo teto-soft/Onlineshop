@@ -53,7 +53,7 @@ try {
         if ($rec['gazou']=='') {
             $pro_gazou[]='';
         } else {
-            $pro_gazou[]='<img src="../product/gazou/'.$rec['gazou'].'">';
+            $pro_gazou[]='<img src="../../gazou/'.$rec['gazou'].'">';
         }
     }
 

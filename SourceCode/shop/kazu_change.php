@@ -39,4 +39,5 @@ $_SESSION['cart']=$cart;
 $_SESSION['kazu']=$kazu;
 
 header('Location: shop_cartlook.php');
+//header('Location: http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/file1.php');
 exit();

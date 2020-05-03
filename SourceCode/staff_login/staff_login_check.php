@@ -33,6 +33,7 @@ try {
         $_SESSION['staff_code']=$staff_code;
         $_SESSION['staff_name']=$rec['name'];
         header('Location: staff_top.php');
+        //header('Location: http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/file1.php');
     }
     exit();
 } catch (Exception $e) {
